@@ -1,0 +1,16 @@
+.game-page {
+    background: white;
+
+    table {
+        border-spacing: 6px;
+        border-top: 0;
+        margin: -6px;
+    }
+
+    .game__cell {
+        height: 50px;
+        width: 50px;
+        background-color: #282c34;
+        font-size: 30px;
+    }
+}
