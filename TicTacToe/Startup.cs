@@ -21,6 +21,7 @@ namespace TicTacToe
             services.AddHealthChecks();
             services.AddSignalR();
             services.AddCors();
+            services.AddDistributedMemoryCache();
             services.AddControllers();
         }
 
@@ -32,8 +33,6 @@ namespace TicTacToe
             }
 
             app.UseRouting();
-
-            // app.UseAuthorization();
 
             app.UseCors(
                 options => options.WithOrigins("http://localhost:3000")

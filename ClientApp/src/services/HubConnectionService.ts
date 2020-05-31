@@ -1,14 +1,22 @@
 import * as signalR from "@microsoft/signalr";
 
+enum HubMethods {
+    sendMark = "sendMark" // (number i, number j)
+}
+
+enum HubCallbackMethods {
+    broadcastBoardStatus = "broadcastBoardStatus" // (number i, number j)
+}
+
 export class HubConnectionService {
     connection = new signalR.HubConnectionBuilder()
         .withUrl('http://localhost:32768/game')
         .build();
-    receiveMarkMethod: (i: number, j: number) => void = () => { };
+    receiveBoardStatus: (board: string[][]) => void = () => { };
 
 
     constructor() {
-        this.connection.on("broadcastMessage", (i, j) => this.receiveMarkMethod(i, j));
+        this.connection.on(HubCallbackMethods.broadcastBoardStatus, (board) => this.receiveBoardStatus(board));
     }
 
     start() {
@@ -17,11 +25,11 @@ export class HubConnectionService {
             .catch(error => console.error(error.message));
     }
 
-    onReceiveMark(newMethod: (i: number, j: number) => void) {
-        this.receiveMarkMethod = newMethod;
+    onReceiveBoardStatus(newMethod: (board: string[][]) => void) {
+        this.receiveBoardStatus = newMethod;
     }
 
     sendMark(i: number, j: number) {
-        this.connection.invoke("send", i, j);
+        this.connection.invoke(HubMethods.sendMark, i, j);
     }
 }
