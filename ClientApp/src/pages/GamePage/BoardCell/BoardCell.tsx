@@ -12,7 +12,7 @@ export enum Values {
     empty = ""
 }
 
-export const BoardCell = (props: Props) => {
+export function BoardCell(props: Props) {
     return <td className="board-cell" onClick={props.onClick}>
         {props.value}
     </td>;

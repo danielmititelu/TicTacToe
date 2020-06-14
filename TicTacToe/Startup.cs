@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using TicTacToe.Hubs;
+using TicTacToe.Services;
 
 namespace TicTacToe
 {
@@ -23,6 +24,7 @@ namespace TicTacToe
             services.AddCors();
             services.AddDistributedMemoryCache();
             services.AddControllers();
+            services.AddScoped<CacheService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

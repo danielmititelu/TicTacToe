@@ -6,12 +6,11 @@ namespace TicTacToe.Services
     public static class TicTacToeEngine
     {
 
-        public static TicTacToeBoard InitializeBoard(Player firstPlayer, Player secondPlayer)
+        public static TicTacToeBoard InitializeBoard(Player firstPlayer)
         {
             return new TicTacToeBoard
             {
                 firstPlayer = firstPlayer,
-                secondPlayer = secondPlayer,
                 grid = new string[][]
                        {
                            new string[]{"", "", "" },
@@ -20,6 +19,12 @@ namespace TicTacToe.Services
                        },
                 CurrentPlayerId = firstPlayer.ConnectionId
             };
+        }
+
+        public static TicTacToeBoard AddSecondPlayer(Player secondPlayer, TicTacToeBoard board)
+        {
+            board.secondPlayer = secondPlayer;
+            return board;
         }
 
         public static TicTacToeBoard AddMark(string playerId, int i, int j, TicTacToeBoard board)

@@ -3,23 +3,25 @@ import './style.scss';
 import { BoardCell } from './BoardCell/BoardCell';
 import { useState, useEffect } from 'react';
 import { HubConnectionService } from '../../services/HubConnectionService';
-import { TicTacToeBoard } from '../../models/TicTacToeBoard';
 
-let hubConnection = new HubConnectionService();
+//let hubConnection = new HubConnectionService();
+interface Props {
+    hubConnection: HubConnectionService
+}
 
-export const GamePage = () => {
+export function GamePage(props: Props) {
     const [boardValues, setBoardValues] = useState([["", "", ""], ["", "", ""], ["", "", ""]]);
 
     useEffect(() => {
-        hubConnection.start();
+        props.hubConnection.start();
     }, []);
 
-    hubConnection.onReceiveBoardStatus((board: string[][]) => {
+    props.hubConnection.onReceiveBoardStatus((board: string[][]) => {
         setBoardValues(board);
     });
 
     const sendMarkLocation = (i: number, j: number) => {
-        hubConnection.sendMark(i, j);
+        props.hubConnection.sendMark(i, j);
     }
 
     return <div className="game-page">
