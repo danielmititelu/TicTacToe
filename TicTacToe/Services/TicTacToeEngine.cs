@@ -10,8 +10,8 @@ namespace TicTacToe.Services
         {
             return new TicTacToeBoard
             {
-                firstPlayer = firstPlayer,
-                grid = new string[][]
+                FirstPlayer = firstPlayer,
+                Grid = new string[][]
                        {
                            new string[]{"", "", "" },
                            new string[]{"", "", "" },
@@ -23,7 +23,7 @@ namespace TicTacToe.Services
 
         public static TicTacToeBoard AddSecondPlayer(Player secondPlayer, TicTacToeBoard board)
         {
-            board.secondPlayer = secondPlayer;
+            board.SecondPlayer = secondPlayer;
             return board;
         }
 
@@ -35,14 +35,14 @@ namespace TicTacToe.Services
             }
 
             string mark;
-            if (board.firstPlayer.ConnectionId == playerId)
+            if (board.FirstPlayer.ConnectionId == playerId)
                 mark = "X";
-            else if (board.secondPlayer.ConnectionId == playerId)
+            else if (board.SecondPlayer.ConnectionId == playerId)
                 mark = "O";
             else
                 throw new Exception("Received player id is not in this game");
 
-            board.grid[i][j] = mark;
+            board.Grid[i][j] = mark;
             return board;
         }
     }

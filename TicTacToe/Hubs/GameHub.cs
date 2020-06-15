@@ -15,22 +15,28 @@ namespace TicTacToe.Hubs
             this.cache = cache;
         }
 
-        public async Task CreateRoom(string name)
+        public async Task GetPlayerUuid()
         {
+            //todo: consider encoding this in a jwt token
             var uuid = Guid.NewGuid().ToString();
+            await Clients.Caller.SendAsync("playerUuid", uuid);
+        }
+
+        public async Task CreateRoom(Player player)
+        {
             var board = TicTacToeEngine.InitializeBoard(
                  new Player
                  {
-                     Uuid = uuid,
+                     Uuid = player.Uuid,
                      ConnectionId = Context.ConnectionId,
-                     Name = name
+                     Name = player.Name
                  }
             );
-            await cache.SaveBoardAsync(uuid, board);
-            await Clients.Caller.SendAsync("roomCreated", new { name, id = uuid });
+            await cache.SaveBoardAsync(player.Uuid, board);
+            await Clients.Caller.SendAsync("board", board);
         }
 
-        public async Task JoinRoom(string name, string roomUuid)
+        public async Task JoinRoom(Player player, string roomUuid)
         {
             var board = await cache.GetBoardAsync(roomUuid);
             if (board == null)
@@ -38,24 +44,29 @@ namespace TicTacToe.Hubs
                 await Clients.Caller.SendAsync("error", "room not found");
             }
 
-            var uuid = Guid.NewGuid().ToString();
             var newBoard = TicTacToeEngine.AddSecondPlayer(new Player
             {
-                Uuid = uuid,
+                Uuid = player.Uuid,
                 ConnectionId = Context.ConnectionId,
-                Name = name
+                Name = player.Name
             }, board);
-            await cache.SaveBoardAsync(uuid, newBoard);
+            await cache.SaveBoardAsync(roomUuid, newBoard);
 
-            await Clients.Client(newBoard.firstPlayer.ConnectionId).SendAsync("opponentName", newBoard.firstPlayer.Name);
-            await Clients.Client(newBoard.secondPlayer.ConnectionId).SendAsync("opponentName", newBoard.secondPlayer.Name);
+            await Clients.Client(newBoard.FirstPlayer.ConnectionId).SendAsync("board", newBoard);
+            await Clients.Client(newBoard.SecondPlayer.ConnectionId).SendAsync("board", newBoard);
+        }
+
+        public async Task GetBoard(string roomUuid)
+        {
+            var board = await cache.GetBoardAsync(roomUuid);
+            await Clients.Caller.SendAsync("board", board);
         }
 
         public async Task StartGame(string roomUuid)
         {
             var board = await cache.GetBoardAsync(roomUuid);
-            await Clients.Client(board.firstPlayer.ConnectionId).SendAsync("startGame");
-            await Clients.Client(board.secondPlayer.ConnectionId).SendAsync("starGame");
+            await Clients.Client(board.FirstPlayer.ConnectionId).SendAsync("startGame");
+            await Clients.Client(board.SecondPlayer.ConnectionId).SendAsync("starGame");
         }
 
         public async Task SendMark(int i, int j)
@@ -72,7 +83,7 @@ namespace TicTacToe.Hubs
             board = TicTacToeEngine.AddMark("qwe", i, j, board);
 
             await cache.SaveBoardAsync(gameKey, board);
-            await Clients.All.SendAsync("broadcastBoardStatus", board.grid);
+            await Clients.All.SendAsync("broadcastBoardStatus", board.Grid);
         }
     }
 }

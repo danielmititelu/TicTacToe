@@ -2,9 +2,9 @@
 {
     public class TicTacToeBoard
     {
-        public string[][] grid;
-        public Player firstPlayer;
-        public Player secondPlayer;
+        public string[][] Grid { get; set; }
+        public Player FirstPlayer { get; set; }
+        public Player SecondPlayer { get; set; }
         public string CurrentPlayerId { get; set; }
     }
 }

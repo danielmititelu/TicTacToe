@@ -1,19 +1,26 @@
 import * as React from 'react';
 import './style.scss';
-import { Link } from 'react-router-dom';
-import { HubConnectionService } from '../../services/HubConnectionService';
+import { Link, useParams } from 'react-router-dom';
+import { Player } from '../../models/Player';
+import { TicTacToeBoard } from '../../models/TicTacToeBoard';
 
 interface Props {
-    hubConnection: HubConnectionService
+    currentPlayer: Player;
+    board: TicTacToeBoard | undefined;
 }
 
 export function LobbyPage(props: Props) {
+    let { uuid } = useParams();
+
     return <div>
-        Players
+        <div> {props.board?.firstPlayer?.name}</div>
+        <div> {props.board?.secondPlayer?.name}</div>
         <button>
             <Link to="/game">
                 Start game
             </Link>
         </button>
+
+        <div>Invite link: {`http://localhost:3000/join/${uuid}`}</div>
     </div>;
 };
