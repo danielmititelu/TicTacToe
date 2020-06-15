@@ -29,14 +29,18 @@ function App() {
     <div className="App">
       <div className="App-content">
         <Switch>
-          <Route path="/room/:uuid">
+          <Route path="/room/:hostRoomUuid">
             <LobbyPage
               hubConnection={hubConnection}
               currentPlayer={localPlayer}
-              board={board} />
+              board={board}
+            />
           </Route>
-          <Route path="/game">
-            <GamePage hubConnection={hubConnection} />
+          <Route path="/game/:hostRoomUuid">
+            <GamePage hubConnection={hubConnection}
+              currentPlayer={localPlayer}
+              board={board}
+            />
           </Route>
           <Route path="/join/:hostRoomUuid">
             <HomePage

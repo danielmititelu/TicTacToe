@@ -17,7 +17,7 @@ namespace TicTacToe.Services
                            new string[]{"", "", "" },
                            new string[]{"", "", "" },
                        },
-                CurrentPlayerId = firstPlayer.ConnectionId
+                CurrentPlayerId = firstPlayer.Uuid
             };
         }
 
@@ -27,22 +27,26 @@ namespace TicTacToe.Services
             return board;
         }
 
-        public static TicTacToeBoard AddMark(string playerId, int i, int j, TicTacToeBoard board)
+        public static TicTacToeBoard AddMark(string playerUuid, int i, int j, TicTacToeBoard board)
         {
-            if (board.CurrentPlayerId != playerId)
+            if (board.CurrentPlayerId != playerUuid)
             {
                 return board;
             }
 
             string mark;
-            if (board.FirstPlayer.ConnectionId == playerId)
+            if (board.FirstPlayer.Uuid == playerUuid)
                 mark = "X";
-            else if (board.SecondPlayer.ConnectionId == playerId)
+            else if (board.SecondPlayer.Uuid == playerUuid)
                 mark = "O";
             else
                 throw new Exception("Received player id is not in this game");
 
             board.Grid[i][j] = mark;
+
+            board.CurrentPlayerId = board.CurrentPlayerId == board.FirstPlayer.Uuid
+                ? board.SecondPlayer.Uuid
+                : board.FirstPlayer.Uuid;
             return board;
         }
     }

@@ -8,7 +8,7 @@ enum HubMethods {
     joinRoom = "joinRoom", // (name, roomUuid)
     getBoard = "getBoard", // (roomUuid)
     startGame = "startGame", // (roomUuid)
-    sendMark = "sendMark", // (number i, number j)
+    sendMark = "sendMark", // (i, j, roomUuid, player)
 }
 
 enum HubCallbackMethods {
@@ -80,8 +80,8 @@ export class HubConnectionService {
         this.connection.invoke(HubMethods.startGame, roomUuid);
     }
 
-    sendMark(i: number, j: number) {
-        this.connection.invoke(HubMethods.sendMark, i, j);
+    sendMark(i: number, j: number, roomUuid: string, player: Player) {
+        this.connection.invoke(HubMethods.sendMark, i, j, roomUuid, player);
     }
 
     onReceivePlayerUuid(method: (uuid: string) => void) {

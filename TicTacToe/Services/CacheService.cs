@@ -15,17 +15,22 @@ namespace TicTacToe.Services
             this.cache = cache;
         }
 
-        public async Task SaveBoardAsync(string key, TicTacToeBoard board)
+        public async Task SaveAsync<T>(string key, T obj)
         {
-            var boardEncoded = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(board));
-            await cache.SetAsync(key, boardEncoded);
+            var playerEncoded = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(obj));
+            await cache.SetAsync(key, playerEncoded);
         }
 
-        public async Task<TicTacToeBoard> GetBoardAsync(string key)
+        public async Task<T> GetAsync<T>(string key)
         {
             var encodedBoard = await cache.GetAsync(key);
-            if(encodedBoard == null) { return null; }
-            return JsonConvert.DeserializeObject<TicTacToeBoard>(Encoding.UTF8.GetString(encodedBoard));
+            if (encodedBoard == null) { return default; }
+            return JsonConvert.DeserializeObject<T>(Encoding.UTF8.GetString(encodedBoard));
+        }
+
+        public async Task RemoveAsync(string key)
+        {
+            await cache.RemoveAsync(key);
         }
     }
 }
