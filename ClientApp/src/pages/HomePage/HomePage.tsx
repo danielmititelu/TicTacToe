@@ -3,9 +3,10 @@ import './style.scss';
 import { useParams, useHistory } from 'react-router-dom';
 import { Player } from '../../models/Player';
 import { HubConnectionService } from '../../services/HubConnectionService';
+import { useEffect } from 'react';
 
 interface Props {
-    localPlayer: Player;
+    currentPlayer: Player;
     hubConnection: HubConnectionService;
     invited: boolean;
     onChangeName: (name: string) => void;
@@ -14,20 +15,24 @@ interface Props {
 export function HomePage(props: Props) {
     let { hostRoomUuid } = useParams();
     const history = useHistory();
-    const { localPlayer, hubConnection,
+    const { currentPlayer, hubConnection,
         invited, onChangeName } = props;
 
+    useEffect(() => {
+        hubConnection.start(currentPlayer);
+    }, []);
+
     const joinPrivateRoom = () => {
-        if (localPlayer.uuid !== "") {
-            hubConnection.joinRoom(localPlayer, hostRoomUuid);
+        if (currentPlayer.uuid !== "") {
+            hubConnection.joinRoom(currentPlayer, hostRoomUuid);
             history.push(`/room/${hostRoomUuid}`);
         }
     }
 
     const createPrivateRoom = () => {
-        if (localPlayer.uuid !== "") {
-            hubConnection.createRoom(localPlayer);
-            history.push(`/room/${localPlayer.uuid}`);
+        if (currentPlayer.uuid !== "") {
+            hubConnection.createRoom(currentPlayer);
+            history.push(`/room/${currentPlayer.uuid}`);
         }
     }
 

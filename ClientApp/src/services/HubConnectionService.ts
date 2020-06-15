@@ -39,8 +39,25 @@ export class HubConnectionService {
         this.connection.on(HubCallbackMethods.onReceiveBoard, (board) => this.receiveBoardCallback(board));
     }
 
-    start(): Promise<void> {
-        return this.connection.start();
+    start(player: Player, board?: TicTacToeBoard, hostRoomUuid?: string) {
+        if (this.connection.state == signalR.HubConnectionState.Connected ||
+            this.connection.state == signalR.HubConnectionState.Connecting) {
+            return;
+        }
+
+        this.connection.start()
+            .then(() => {
+                if (player.uuid === "") {
+                    this.getPlayerUuid();
+                }
+
+                if (hostRoomUuid && !board) {
+                    this.getBoard(hostRoomUuid);
+                }
+                console.log('connection started');
+            }).catch(error => {
+                console.error(error.message)
+            });
     }
 
     getPlayerUuid() {

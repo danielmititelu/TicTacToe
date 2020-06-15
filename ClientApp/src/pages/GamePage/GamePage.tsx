@@ -4,7 +4,6 @@ import { BoardCell } from './BoardCell/BoardCell';
 import { useState, useEffect } from 'react';
 import { HubConnectionService } from '../../services/HubConnectionService';
 
-//let hubConnection = new HubConnectionService();
 interface Props {
     hubConnection: HubConnectionService
 }
@@ -12,9 +11,9 @@ interface Props {
 export function GamePage(props: Props) {
     const [boardValues, setBoardValues] = useState([["", "", ""], ["", "", ""], ["", "", ""]]);
 
-    useEffect(() => {
-        props.hubConnection.start();
-    }, []);
+    // useEffect(() => {
+    //     props.hubConnection.start();
+    // }, []);
 
     props.hubConnection.onReceiveBoardStatus((board: string[][]) => {
         setBoardValues(board);
